@@ -16,12 +16,13 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String[] command = update.getMessage().getText().toLowerCase().split(" ");
-            SendMessage reply;
+            SendMessage reply = new SendMessage().setText("Sorry, I do not understand you.").setChatId(update.getMessage().getChatId());
             if (command.length > 0) {
-                reply = skills.get(command[0]).handle(update.getMessage());
-            } else {
-                reply = new SendMessage().setText("Sorry, I do not understand you.").setChatId(update.getMessage().getChatId());
-            }
+                Skill sk = skills.get(command[0]);
+                if (sk != null) {
+                    reply = skills.get(command[0]).handle(update.getMessage());
+                }
+            } else { }
             try {
                 execute(reply); // Call method to send the message
             } catch (TelegramApiException e) {
