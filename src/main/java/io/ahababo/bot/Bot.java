@@ -42,5 +42,8 @@ public class Bot extends TelegramLongPollingBot {
     public Bot() {
         skills = new HashMap<String, Skill>();
         skills.put("hello", new HelloWorld());
+        skills.put("hello1", new HelloWorld());
+        skills.put("hello2", new HelloWorld());
+        skills.put("hello3", new HelloWorld());
     }
 }
