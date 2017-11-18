@@ -80,6 +80,6 @@ public class Bot extends TelegramLongPollingBot {
         privateFactory.register("guess", NumberGuessSkill.class);
         privateFactory.register("beer", BeerSkill.class);
         privateFactory.register("help", help.class);
-        privateFactory.register("RockPaperScissor", RockPaperScissorSkill.class);
+        privateFactory.register("rock paper scissor", RockPaperScissorSkill.class);
     }
 }
