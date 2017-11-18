@@ -23,7 +23,7 @@ public class SkillFactory {
         Class<? extends Skill> match = skills.get(buzzwords);
         if (match == null) return null;
 
-        logger.fine("Find matching skill for buzzwords " + buzzwords);
+        logger.info("Find matching skill for buzzwords " + buzzwords);
         Constructor[] constructors = match.getDeclaredConstructors();
         for (Constructor ctor : constructors) {
             if (ctor.getParameterCount() != 0) {

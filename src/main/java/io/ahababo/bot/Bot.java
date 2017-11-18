@@ -10,9 +10,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Bot extends TelegramLongPollingBot {
@@ -20,38 +17,35 @@ public class Bot extends TelegramLongPollingBot {
     private ConcurrentHashMap<User, Skill> activeSkills;
     private SkillFactory groupFactory, privateFactory;
 
-    static {
-        Handler consoleHandler = new ConsoleHandler();
-        consoleHandler.setLevel(Level.FINER);
-        logger.addHandler(consoleHandler);
-    }
-
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            logger.fine("Received update " + update.getUpdateId());
+        if (update.hasMessage() || update.hasChannelPost()) {
+            logger.info("Received update " + update.getUpdateId());
 
+            Message incoming = null;
+            User user = null;
             SkillFactory selectedChannel = null;
-            if (update.getMessage().getChat().isUserChat()) {
-                logger.fine("Selected private factory for user chat");
+            if (update.hasMessage() && update.getMessage().getChat().isUserChat()) {
+                logger.info("Selected private factory for user chat");
                 selectedChannel = privateFactory;
-            } else if (update.getMessage().getChat().isChannelChat()) {
-                logger.fine("Selected public factory for channel chat");
+                incoming = update.getMessage();
+                user = new User(incoming.getFrom().getId());
+            } else if (update.hasChannelPost()) {
+                logger.info("Selected public factory for channel chat");
                 selectedChannel = groupFactory;
+                incoming = update.getChannelPost();
+                user = new User(-1);
             } else {
                 logger.warning("Received group chat message");
                 // TODO: Handle group chats
                 return;
             }
 
-            Message incoming = update.getMessage();
-            User user = new User(incoming.getFrom().getId());
             Skill active = activeSkills.get(user);
-
-            logger.fine("Incoming message from user " + user.getUserId() + ": " + incoming.getText());
+            logger.info("Incoming message from user " + user.getUserId() + ": " + incoming.getText());
             if (active == null || (active != null && active.isFinished())) {
-                logger.fine("Searching for new skill");
+                logger.info("Searching for new skill");
                 try {
-                    active = selectedChannel.makeSkill(update.getMessage().getText());
+                    active = selectedChannel.makeSkill(incoming.getText());
                     if (active == null) {
                         logger.warning("Failed to handle command");
                         // TODO: Show useful 'command not found' message
@@ -60,7 +54,7 @@ public class Bot extends TelegramLongPollingBot {
                     active.init(user);
                     activeSkills.put(user, active);
                 } catch (Exception e) {
-                    logger.warning(e.getMessage());
+                    e.printStackTrace();
                     // TODO: Handle error
                     return;
                 }
@@ -91,5 +85,6 @@ public class Bot extends TelegramLongPollingBot {
         privateFactory = new SkillFactory();
 
         privateFactory.register("hello", HelloWorldSkill.class);
+        groupFactory.register("hello", HelloWorldSkill.class);
     }
 }
