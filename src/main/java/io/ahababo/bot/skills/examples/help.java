@@ -13,13 +13,13 @@ public class help extends BasicSkill{
     super.init(user);
   }
 
-  String message = "hello\nguess\ngood bot\nbeer\nRockPaperScissor";
+  String message = "hello";
 
   @Override
   public SendMessage handle(Message incoming) {
 
 
-    return  new SendMessage().setChatId(incoming.getChatId()).setText(message);
+    return new SendMessage().setChatId(incoming.getChatId()).setText(message);
   }
 
   public boolean isFinished(){return true;}
