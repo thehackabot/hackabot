@@ -6,7 +6,7 @@ import io.ahababo.bot.skills.SkillFactory;
 import io.ahababo.bot.skills.drinking.BeerSkill;
 import io.ahababo.bot.skills.examples.GoodBotSkill;
 import io.ahababo.bot.skills.examples.HelloWorldSkill;
-import io.ahababo.bot.skills.examples.NumberGuessSkill;
+import io.ahababo.bot.skills.games.NumberGuessSkill;
 import io.ahababo.bot.skills.games.RockPaperScissorSkill;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package io.ahababo.bot.skills.examples;
+package io.ahababo.bot.skills.games;
 
 import io.ahababo.bot.User;
 import io.ahababo.bot.skills.BasicSkill;
