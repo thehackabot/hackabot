@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Bot extends TelegramLongPollingBot {
     private final static Logger logger = LoggerFactory.getLogger(Bot.class);
+    private ConcurrentHashMap<User, Long> activeIsers;
     private ConcurrentHashMap<User, Skill> activeSkills;
     private SkillFactory groupFactory, privateFactory;
 
@@ -93,6 +94,6 @@ public class Bot extends TelegramLongPollingBot {
         privateFactory.register("drunk beer bot", "give beer bot", BeerSkill.class);
         privateFactory.register("help", "help me please", HelpSkill.class);
         privateFactory.register("rock paper scissor", "rock paper scissor", RockPaperScissorSkill.class);
-        privateFactory.register("hangman","let's play hangman", HangmanSkill.class);
+        //privateFactory.register("hangman","let's play hangman", HangmanSkill.class);
     }
 }
