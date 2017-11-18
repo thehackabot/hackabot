@@ -20,7 +20,10 @@ import java.util.Map;
 
 public class EmotionDetector {
     private static final Logger logger = LoggerFactory.getLogger(EmotionDetector.class);
-    private static final String azureSubscriptionKey = "3521efef1d1646eeb40a128921297811";
+    private static final String TELEGRAM_FILE_API = "https://api.telegram.org/bot%s/getFile?file_id=%s";
+    private static final String TELEGRAM_IMAGE_API = "https://api.telegram.org/file/bot%s/%s";
+    private static final String AZURE_COGNITION_API = "https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize";
+    private static final String AZURE_COGNITION_KEY = "3521efef1d1646eeb40a128921297811";
 
     private static String sendRequest(HttpUriRequest request) throws Exception {
         HttpClient client = new DefaultHttpClient();
@@ -36,19 +39,17 @@ public class EmotionDetector {
 
     public static Result[] detect(Bot context, String fileId) throws Exception {
         // Fetch image path from Telegram
-        URIBuilder filePathUri = new URIBuilder("https://api.telegram.org/bot" + context.getBotToken() + "/getFile?file_id=" + fileId);
+        URIBuilder filePathUri = new URIBuilder(String.format(TELEGRAM_FILE_API, context.getBotToken(), fileId));
         HttpGet filePathReq = new HttpGet(filePathUri.build());
-        logger.info(filePathUri.build().toString());
         JSONObject response = new JSONObject(sendRequest(filePathReq));
-        logger.info(response.toString());
-        String path = response.getJSONObject("result").getString("file_path");
+        String publicFilePath = response.getJSONObject("result").getString("file_path");
 
         // Fetch emotions from Azure
-        URIBuilder imageUri = new URIBuilder("https://api.telegram.org/file/bot" + context.getBotToken() + "/" + path);
-        URIBuilder emotionUri = new URIBuilder("https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize");
+        URIBuilder imageUri = new URIBuilder(String.format(TELEGRAM_IMAGE_API, context.getBotToken(), publicFilePath));
+        URIBuilder emotionUri = new URIBuilder(AZURE_COGNITION_API);
         HttpPost emotionRequest = new HttpPost(emotionUri.build());
         emotionRequest.setHeader("Content-Type", "application/json");
-        emotionRequest.setHeader("Ocp-Apim-Subscription-Key", azureSubscriptionKey);
+        emotionRequest.setHeader("Ocp-Apim-Subscription-Key", AZURE_COGNITION_KEY);
 
         StringEntity requestEntity = new StringEntity("{ \"url\": \"" + imageUri.build().toString() + "\" }");
         emotionRequest.setEntity(requestEntity);
@@ -84,29 +85,50 @@ public class EmotionDetector {
             this.surprise = surprise;
         }
 
-        public Map<String, Double> toMap() {
-            return Map.of("anger", anger, "contempt", contempt, "disgust", disgust, "fear", fear, "happiness", happiness, "neutral", neutral, "sadness", sadness, "surprise", surprise);
+        public double[] rawValues() {
+            return new double[]{
+                    anger, contempt, disgust, fear, happiness, neutral, sadness, surprise
+            };
+        }
+
+        public double similarTo(Result r) {
+            double[] x = r.rawValues(), y = rawValues();
+            double a = 0;
+            for (int i = 0; i < x.length; i++) {
+                a += x[i] * y[i];
+            }
+            double b = 0;
+            for (int i = 0; i < x.length; i++) {
+                b += x[i] * x[i];
+            }
+            b = Math.sqrt(b);
+            double c = 0;
+            for (int i = 0; i < y.length; i++) {
+                c += y[i] * y[i];
+            }
+            c = Math.sqrt(c);
+            return a / (b * c);
         }
 
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder(" ");
-            if (anger > 0.5) builder.append("You are angry.");
-            else builder.append("You are not angry.");
-            if (contempt > 0.5) builder.append("You are contempt.");
-            else builder.append("You are not contempt.");
-            if (disgust > 0.5) builder.append("You are disgusted.");
-            else builder.append("You are not disgusted.");
-            if (fear > 0.5) builder.append("You have fear.");
-            else builder.append("You have no fear.");
-            if (happiness > 0.5) builder.append("You are happy.");
-            else builder.append("You are not happy.");
-            if (neutral > 0.5) builder.append("You look neutral.");
-            else builder.append("You look not neutral.");
-            if (sadness > 0.5) builder.append("You look sad.");
-            else builder.append("You look not sad.");
-            if (surprise > 0.5) builder.append("You look surprised.");
-            else builder.append("You are not surprised.");
+            if (anger > 0.8) builder.append("You are angry. ");
+            else if (anger < 0.15) builder.append("You are not angry. ");
+            if (contempt > 0.8) builder.append("You are contempt. ");
+            else if (contempt < 0.15) builder.append("You are not contempt. ");
+            if (disgust > 0.8) builder.append("You are disgusted. ");
+            else if (disgust < 0.15) builder.append("You are not disgusted. ");
+            if (fear > 0.8) builder.append("You have fear. ");
+            else if (fear < 0.15) builder.append("You have no fear. ");
+            if (happiness > 0.8) builder.append("You are happy. ");
+            else if (happiness < 0.15) builder.append("You are not happy. ");
+            if (neutral > 0.8) builder.append("You look neutral. ");
+            else if (neutral < 0.15) builder.append("You look not neutral. ");
+            if (sadness > 0.8) builder.append("You look sad. ");
+            else if (sadness < 0.15) builder.append("You look not sad. ");
+            if (surprise > 0.8) builder.append("You look surprised. ");
+            else if (surprise < 0.15) builder.append("You are not surprised. ");
             return builder.toString();
         }
     }
