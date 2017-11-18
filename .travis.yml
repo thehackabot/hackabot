@@ -1,6 +1,12 @@
 sudo: required
 
-language: ruby
+language: java
 
 services:
   - docker
+
+after_success:
+  - docker build -t $DOCKER_IMAGE .
+  - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_URL
+  - docker push $DOCKER_IMAGE
+  - curl -X POST $SECRET_HOOK
