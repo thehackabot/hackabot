@@ -2,13 +2,16 @@ package io.ahababo.bot;
 
 public class User {
     private final int id;
-    public User(int id) {
+    private final long chatId;
+    public User(int id, long chatId) {
         this.id = id;
+        this.chatId = chatId;
     }
 
     public long getUserId() {
         return id;
     }
+    public long getChatId() { return chatId; }
 
     @Override
     public boolean equals(Object o) {

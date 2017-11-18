@@ -15,14 +15,18 @@ public class SkillFactory {
         public final Class<? extends Skill> skill;
         public final ArrayList<String> buzzwords;
         public final String trigger;
+        public final boolean enableGroup;
 
-        public FactoryItem(Class<? extends Skill> skill, ArrayList<String> buzzwords, String trigger) {
+        public FactoryItem(Class<? extends Skill> skill, ArrayList<String> buzzwords, String trigger, boolean enableGroup) {
             this.skill = skill;
             this.buzzwords = buzzwords;
+            this.enableGroup = enableGroup;
             this.trigger = trigger;
         }
 
-        public float match(String sentence) {
+        public float match(String sentence, boolean isGroup) {
+            if (!enableGroup && isGroup) return -1.f;
+
             String[] words = sentence.toLowerCase().split(" ");
             HashMap<String, Boolean> existing = new HashMap<String, Boolean>();
             for (String w : words) {
@@ -44,16 +48,16 @@ public class SkillFactory {
         factoryItems = new ArrayList<>();
     }
 
-    public void register(String buzzwords, String exampleTrigger, Class<? extends Skill> skill) {
+    public void register(String buzzwords, String exampleTrigger, Class<? extends Skill> skill, boolean enableGroup) {
         ArrayList<String> items = new ArrayList<>(Arrays.asList(buzzwords.toLowerCase().split(" ")));
-        factoryItems.add(new FactoryItem(skill, items, exampleTrigger));
+        factoryItems.add(new FactoryItem(skill, items, exampleTrigger, enableGroup));
     }
 
-    public Skill makeSkill(String buzzwords) throws InstantiationException, IllegalAccessException,InvocationTargetException {
+    public Skill makeSkill(String buzzwords, boolean isGroup) throws InstantiationException, IllegalAccessException,InvocationTargetException {
         float maxMatch = 0;
         FactoryItem bestMatch = null;
         for (FactoryItem item : factoryItems) {
-            float score = item.match(buzzwords);
+            float score = item.match(buzzwords, isGroup);
             if (score > maxMatch) {
                 maxMatch = score;
                 bestMatch = item;

@@ -1,5 +1,6 @@
 package io.ahababo.bot;
 
+import io.ahababo.bot.skills.drinking.DareSkill;
 import io.ahababo.bot.skills.examples.*;
 import io.ahababo.bot.skills.Skill;
 import io.ahababo.bot.skills.SkillFactory;
@@ -17,60 +18,70 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class Bot extends TelegramLongPollingBot {
+    private final static long USER_TIMEOUT = 60000;
     private final static Logger logger = LoggerFactory.getLogger(Bot.class);
-    private ConcurrentHashMap<User, Long> activeIsers;
+    private ConcurrentHashMap<User, Long> privateUsers;
     private ConcurrentHashMap<User, Skill> activeSkills;
-    private SkillFactory groupFactory, privateFactory;
+    private SkillFactory skillFactory;
 
-    public SkillFactory getPrivateFactory() {
-        return privateFactory;
+    public List<User> getActiveUsers() {
+        return privateUsers.keySet().stream()
+                .filter(v -> System.currentTimeMillis() - privateUsers.get(v) <= USER_TIMEOUT)
+                .collect(Collectors.toList());
     }
 
-    public SkillFactory getGroupFactory() {
-        return groupFactory;
+    public SkillFactory getPrivateFactory() {
+        return skillFactory;
+    }
+
+    public void publish(SendMessage msg) {
+        try {
+            execute(msg); // Call method to send the message
+        } catch (TelegramApiException e) {
+            logger.error("Could not reply to message", e);
+        }
     }
 
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
             logger.info("Received update #" + update.getUpdateId());
 
-
             Message incoming = update.getMessage();
-            User user = new User(incoming.getFrom().getId());
+            User user = new User(incoming.getFrom().getId(), incoming.getChatId());
             if (update.getMessage().isGroupMessage()) {
-                user = new User(-update.getMessage().getChatId().intValue());
+                user = new User(-incoming.getChatId().intValue(), incoming.getChatId());
+            } else {
+                privateUsers.put(user, System.currentTimeMillis());
             }
-            SkillFactory selectedChannel = privateFactory;
 
             Skill active = activeSkills.get(user);
+            SendMessage reply = null;
             logger.info("Incoming message from user #" + user.getUserId() + ": " + incoming.getText());
              if (active == null || (active != null && active.isFinished())) {
                 logger.info("Searching for new skill");
                 try {
-                    active = selectedChannel.makeSkill(incoming.getText());
+                    active = skillFactory.makeSkill(incoming.getText(), update.getMessage().isGroupMessage());
                     if (active == null) {
-                        logger.error("Failed to handle command");
-                        // TODO: Show useful 'command not found' message
-                        return;
+                        logger.error("Failed to classify command");
+                        reply = new SendMessage().setChatId(incoming.getChatId()).setText("Sorry, it seems something has gone wrong.");
+                    } else {
+                        active.init(this, user);
+                        activeSkills.put(user, active);
                     }
-                    active.init(this, user);
-                    activeSkills.put(user, active);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    // TODO: Handle error
-                    return;
+                    reply = new SendMessage().setChatId(incoming.getChatId()).setText("Oh boy, oh boy, oh boy ...");
                 }
             }
 
-            SendMessage reply = active.handle(incoming);
-            try {
-                execute(reply); // Call method to send the message
-            } catch (TelegramApiException e) {
-                logger.error("Could not reply to message", e);
-            }
+            if (reply == null) reply = active.handle(incoming);
+            publish(reply);
         }
     }
 
@@ -84,16 +95,17 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public Bot() {
+        privateUsers = new ConcurrentHashMap<>();
         activeSkills = new ConcurrentHashMap<>();
-        groupFactory = new SkillFactory();
-        privateFactory = new SkillFactory();
+        skillFactory = new SkillFactory();
 
-        privateFactory.register("good bot", "you are a good bot", GoodBotSkill.class);
-        privateFactory.register("hello", "hello there", HelloWorldSkill.class);
-        privateFactory.register("guess", "i want to guess", NumberGuessSkill.class);
-        privateFactory.register("drunk beer bot", "give beer bot", BeerSkill.class);
-        privateFactory.register("help", "help me please", HelpSkill.class);
-        privateFactory.register("rock paper scissor", "rock paper scissor", RockPaperScissorSkill.class);
+        skillFactory.register("good bot", "you are a good bot", GoodBotSkill.class, true);
+        skillFactory.register("hello", "hello there", HelloWorldSkill.class, true);
+        skillFactory.register("guess", "i want to guess", NumberGuessSkill.class, true);
+        skillFactory.register("drunk beer bot", "give beer bot", BeerSkill.class, true);
+        skillFactory.register("help", "help me please", HelpSkill.class, true);
+        skillFactory.register("rock paper scissor", "rock paper scissor", RockPaperScissorSkill.class, true);
+        //skillFactory.register("match", "match me with someone", DareSkill.class, false);
         //privateFactory.register("hangman","let's play hangman", HangmanSkill.class);
     }
 }
