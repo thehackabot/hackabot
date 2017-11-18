@@ -2,35 +2,29 @@ package io.ahababo.bot.skills.games;
 
 import io.ahababo.bot.User;
 import io.ahababo.bot.skills.BasicSkill;
+import io.ahababo.bot.skills.StatefulSkill;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 
 import java.util.Random;
 
-public class NumberGuessSkill extends BasicSkill {
-    private int state;
-
-    public NumberGuessSkill() {
-        super();
-    }
-
+public class NumberGuessSkill extends StatefulSkill {
     @Override
     public void init(User user) {
-        super.init(user);
-        state = 0;
+        super.init(user, 2);
     }
 
     @Override
-    public SendMessage handle(Message incoming) {
+    public SendMessage transition(Message incoming, int state) {
         switch (state) {
             case 0:
-                state++;
+                increaseState();
                 return new SendMessage().setChatId(incoming.getChatId()).setText("Please guess a number between 0 and 100.");
             case 1:
                 try {
                     int guess = Integer.parseInt(incoming.getText());
                     int computer = new Random().nextInt() % 101;
-                    state++;
+                    increaseState();
                     if (state == computer) {
                         return new SendMessage().setChatId(incoming.getChatId()).setText("Oh well, you we're right!");
                     } else {
@@ -43,10 +37,5 @@ public class NumberGuessSkill extends BasicSkill {
                 }
         }
         return null;
-    }
-
-    @Override
-    public boolean isFinished() {
-        return state >= 2;
     }
 }
