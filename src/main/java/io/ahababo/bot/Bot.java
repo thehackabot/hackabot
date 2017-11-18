@@ -92,7 +92,7 @@ public class Bot extends TelegramLongPollingBot {
                     active = skillFactory.makeSkill(incoming.getText(), update.getMessage().isGroupMessage());
                     if (active == null) {
                         logger.error("Failed to classify command");
-                        reply = new SendMessage().setChatId(incoming.getChatId()).setText("Sorry, it seems something has gone wrong.");
+                        return;
                     } else {
                         active.init(this, user);
                         activeSkills.put(user, active);
@@ -132,7 +132,7 @@ public class Bot extends TelegramLongPollingBot {
         skillFactory.register("match", "match me with someone", MatchSkill.class, false);
         skillFactory.register("selfie", "rate my selfie", SelfieSkill.class, true);
         skillFactory.register("power point karaoke", "join me for karaoke", PowerPointKaraokeSkill.class, true);
-        skillFactory.register("emotion", "show my emotion", EmotionSkill.class, false);
+        skillFactory.register("emotion", "show my emotion", EmotionSkill.class, true);
         //privateFactory.register("hangman","let's play hangman", HangmanSkill.class);
     }
 }
