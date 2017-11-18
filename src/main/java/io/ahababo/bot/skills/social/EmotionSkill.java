@@ -1,4 +1,4 @@
-package io.ahababo.bot.skills.drinking;
+package io.ahababo.bot.skills.social;
 
 import io.ahababo.bot.Bot;
 import io.ahababo.bot.User;
@@ -32,11 +32,11 @@ public class EmotionSkill extends StatefulSkill {
                 try {
                     EmotionDetector.Result[] emotions = EmotionDetector.detect(getContext(), fileId);
                     for (int i = 0; i < emotions.length; i++) {
-                        String msgText = "You are number " + i + ". " + emotions[i].toString();
+                        String msgText = "You are number " + i + "." + emotions[i].toString();
                         getContext().publish(new SendMessage().setChatId(message.getChatId()).setText(msgText));
                     }
                 } catch (Exception e) {
-                    logger.error("Shit happened", e);
+                    logger.error("Error while analyzing emotions", e);
                     return new SendMessage().setChatId(message.getChatId()).setText("Sorry, I am a bit confused right now.");
                 }
 

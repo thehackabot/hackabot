@@ -1,4 +1,4 @@
-package io.ahababo.bot.skills.drinking;
+package io.ahababo.bot.skills.social;
 
 import io.ahababo.bot.Bot;
 import io.ahababo.bot.User;
@@ -20,6 +20,7 @@ public class MatchSkill extends StatefulSkill {
     private final String MATCH_IGNORE = "Well, if you don't want to.";
     private final String MATCH_FOUND = "Your search was successful. You are %.2f%% similar to your match. He/she describes himself/herself as '%s'.";
     private final String MATCH_IN_QUEUE = "You are a right proper lad. We will find a match for you.";
+    private final int MIN_MATCHES = 3;
 
     private String description, image;
     private EmotionDetector.Result emotions;
@@ -63,7 +64,7 @@ public class MatchSkill extends StatefulSkill {
         increaseState();
         description = incoming.getText();
         CommonContext.MatchEntry entry = CommonContext.getInstance().lookForMatch(getUser(), emotions);
-        if (entry != null) {
+        if (entry != null && CommonContext.getInstance().openMatches.size() >= MIN_MATCHES) {
             double similarity = (entry.emotions.similarTo(emotions) / 2.0 + 0.5) * 100.0;
             getContext().publish(new SendMessage()
                     .setChatId(entry.match.getChatId())
