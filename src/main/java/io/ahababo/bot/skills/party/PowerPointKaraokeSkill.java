@@ -21,7 +21,7 @@ public class PowerPointKaraokeSkill extends BasicSkill {
     }
 
     public SendMessage handle(Message message) {
-        int playerIndex = new Random().nextInt() % getContext().getUserPhotosLength();
+        int playerIndex = new Random().nextInt(getContext().getUserPhotosLength());
         User player = getContext().getActiveUsers().get(playerIndex);
         // Send player photo
         getContext().publish(new SendPhoto().setChatId(message.getChatId()).setPhoto(getContext().getUserPhoto(player)));
