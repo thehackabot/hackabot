@@ -28,7 +28,7 @@ public class RockPaperScissorSkill extends BasicSkill{
                                 "What do you chose? Rock, Paper or Scissor";
                 return new SendMessage().setChatId(incoming.getChatId()).setText(botmsg);
             case 1:
-                int random = new Random().nextInt() % 2;
+                int random = new Random().nextInt() % 3;
                 switch (random){
                     case 0: botchoice += "Rock";
                         break;
