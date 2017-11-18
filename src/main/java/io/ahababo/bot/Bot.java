@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class Bot extends TelegramLongPollingBot {
-    private final static long USER_TIMEOUT = 60000;
+    private final static long USER_TIMEOUT = 300000;
     private final static Logger logger = LoggerFactory.getLogger(Bot.class);
     private ConcurrentHashMap<User, Long> privateUsers;
     private ConcurrentHashMap<User, Skill> activeSkills;
