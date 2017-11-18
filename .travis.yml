@@ -8,6 +8,6 @@ services:
 after_success:
   - docker build -t $DOCKER_IMAGE .
   - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY_URL
-  - docker push $DOCKER_IMAG
+  - docker push $DOCKER_IMAGE
   - echo "$WEBHOOK_URL/?hook=$WEBHOOK_NAME&token=$WEBHOOK_TOKEN"
   - curl --data "" "$WEBHOOK_URL/?hook=$WEBHOOK_NAME&token=$WEBHOOK_TOKEN"
