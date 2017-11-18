@@ -64,7 +64,7 @@ public class MatchSkill extends StatefulSkill {
         description = incoming.getText();
         CommonContext.MatchEntry entry = CommonContext.getInstance().lookForMatch(getUser(), emotions);
         if (entry != null) {
-            double similarity = (entry.emotions.similarTo(emotions) / 0.5 + 0.5) * 100.0;
+            double similarity = (entry.emotions.similarTo(emotions) / 2.0 + 0.5) * 100.0;
             getContext().publish(new SendMessage()
                     .setChatId(entry.match.getChatId())
                     .setText(String.format(MATCH_FOUND, similarity, description)));
