@@ -1,5 +1,6 @@
 package io.ahababo.bot.skills.games;
 
+import io.ahababo.bot.Bot;
 import io.ahababo.bot.User;
 import java.util.ArrayList;
 import java.util.Random;
@@ -27,8 +28,8 @@ public class HangmanSkill extends BasicSkill {
 
 
   @Override
-  public void init(User user) {
-    super.init(user);
+  public void init(Bot context, User user) {
+    super.init(context, user);
     state = 0;
   }
 

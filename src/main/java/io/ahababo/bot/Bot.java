@@ -42,7 +42,7 @@ public class Bot extends TelegramLongPollingBot {
                         // TODO: Show useful 'command not found' message
                         return;
                     }
-                    active.init(user);
+                    active.init(this, user);
                     activeSkills.put(user, active);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -70,7 +70,6 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public Bot() {
-
         activeSkills = new ConcurrentHashMap<>();
         groupFactory = new SkillFactory();
         privateFactory = new SkillFactory();

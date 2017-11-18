@@ -1,20 +1,16 @@
 package io.ahababo.bot.skills;
 
+import io.ahababo.bot.Bot;
 import io.ahababo.bot.User;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 
-public abstract class StatefulSkill implements Skill {
-    private User user;
+public abstract class StatefulSkill extends BasicSkill {
     private int state;
     private int maxStates;
 
-    public User getUser() {
-        return user;
-    }
-
-    public void init(User user, int maxStates) {
-        this.user = user;
+    public void init(Bot context, User user, int maxStates) {
+        super.init(context, user);
         this.maxStates = maxStates;
         this.state = 0;
     }

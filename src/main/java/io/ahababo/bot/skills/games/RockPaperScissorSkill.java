@@ -1,5 +1,6 @@
 package io.ahababo.bot.skills.games;
 
+import io.ahababo.bot.Bot;
 import io.ahababo.bot.User;
 import io.ahababo.bot.skills.BasicSkill;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -12,8 +13,8 @@ public class RockPaperScissorSkill extends BasicSkill{
 
     public RockPaperScissorSkill(){ super();}
 
-    public void init(User user){
-        super.init(user);
+    public void init(Bot context, User user){
+        super.init(context, user);
         state = 0;
     }
 

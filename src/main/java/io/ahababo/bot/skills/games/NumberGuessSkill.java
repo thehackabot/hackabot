@@ -1,5 +1,6 @@
 package io.ahababo.bot.skills.games;
 
+import io.ahababo.bot.Bot;
 import io.ahababo.bot.User;
 import io.ahababo.bot.skills.BasicSkill;
 import io.ahababo.bot.skills.StatefulSkill;
@@ -10,8 +11,8 @@ import java.util.Random;
 
 public class NumberGuessSkill extends StatefulSkill {
     @Override
-    public void init(User user) {
-        super.init(user, 2);
+    public void init(Bot context, User user) {
+        super.init(context, user, 2);
     }
 
     @Override
