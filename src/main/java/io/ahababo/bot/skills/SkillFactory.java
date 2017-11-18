@@ -19,6 +19,7 @@ public class SkillFactory {
     }
 
     public Skill makeSkill(String buzzwords) throws InstantiationException, IllegalAccessException,InvocationTargetException {
+        // TODO: Use matching algorithm for buzzwords
         Class<? extends Skill> match = skills.get(buzzwords);
         if (match == null) return null;
 
