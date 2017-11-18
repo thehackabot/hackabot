@@ -1,5 +1,6 @@
 package io.ahababo.bot;
 
+import io.ahababo.bot.skills.examples.*;
 import io.ahababo.bot.skills.Skill;
 import io.ahababo.bot.skills.SkillFactory;
 import io.ahababo.bot.skills.drinking.BeerSkill;
@@ -78,8 +79,7 @@ public class Bot extends TelegramLongPollingBot {
         privateFactory.register("guess", NumberGuessSkill.class);
         privateFactory.register("good bot", GoodBotSkill.class);
         privateFactory.register("beer", BeerSkill.class);
-
-        //privateFactory.register("help",he);
+        privateFactory.register("help", help.class);
 
         privateFactory.register("RockPaperScissor", RockPaperScissorSkill.class);
         groupFactory.register("hello", HelloWorldSkill.class);
