@@ -1,27 +1,22 @@
 package io.ahababo.bot;
 
-import io.ahababo.bot.skills.drinking.EmotionSkill;
-import io.ahababo.bot.skills.drinking.MatchSkill;
-import io.ahababo.bot.skills.examples.*;
 import io.ahababo.bot.skills.Skill;
 import io.ahababo.bot.skills.SkillFactory;
 import io.ahababo.bot.skills.drinking.BeerSkill;
+import io.ahababo.bot.skills.drinking.EmotionSkill;
+import io.ahababo.bot.skills.drinking.MatchSkill;
 import io.ahababo.bot.skills.examples.GoodBotSkill;
 import io.ahababo.bot.skills.examples.HelloWorldSkill;
+import io.ahababo.bot.skills.examples.HelpSkill;
 import io.ahababo.bot.skills.games.NumberGuessSkill;
 import io.ahababo.bot.skills.games.RockPaperScissorSkill;
 import io.ahababo.bot.skills.games.SelfieSkill;
-<<<<<<< Updated upstream
 import io.ahababo.bot.skills.party.PowerPointKaraokeSkill;
-import org.glassfish.hk2.api.Self;
-=======
->>>>>>> Stashed changes
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.PhotoSize;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
