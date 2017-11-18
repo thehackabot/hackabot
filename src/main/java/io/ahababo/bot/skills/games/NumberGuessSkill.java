@@ -24,7 +24,7 @@ public class NumberGuessSkill extends StatefulSkill {
             case 1:
                 try {
                     int guess = Integer.parseInt(incoming.getText());
-                    int computer = new Random().nextInt() % 101;
+                    int computer = new Random().nextInt(100) + 1;
                     increaseState();
                     if (state == computer) {
                         return new SendMessage().setChatId(incoming.getChatId()).setText("Oh well, you we're right!");
