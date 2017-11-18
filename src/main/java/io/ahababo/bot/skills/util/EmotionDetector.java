@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 public class EmotionDetector {
     private static final Logger logger = LoggerFactory.getLogger(EmotionDetector.class);
@@ -81,6 +82,10 @@ public class EmotionDetector {
             this.neutral = neutral;
             this.sadness = sadness;
             this.surprise = surprise;
+        }
+
+        public Map<String, Double> toMap() {
+            return Map.of("anger", anger, "contempt", contempt, "disgust", disgust, "fear", fear, "happiness", happiness, "neutral", neutral, "sadness", sadness, "surprise", surprise);
         }
 
         @Override

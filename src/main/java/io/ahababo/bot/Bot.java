@@ -39,11 +39,11 @@ public class Bot extends TelegramLongPollingBot {
                 .collect(Collectors.toList());
     }
 
-    public String getUserPhoto(User user){
-       return userPhotos.get(user);
+    public String getUserPhoto(User user) {
+        return userPhotos.get(user);
     }
 
-    public int getUserPhotosLength(){
+    public int getUserPhotosLength() {
         return userPhotos.size();
     }
 
@@ -86,7 +86,7 @@ public class Bot extends TelegramLongPollingBot {
             Skill active = activeSkills.get(user);
             SendMessage reply = null;
             logger.info("Incoming message from user #" + user.getUserId() + ": " + incoming.getText());
-             if (active == null || (active != null && active.isFinished())) {
+            if (active == null || (active != null && active.isFinished())) {
                 logger.info("Searching for new skill");
                 try {
                     active = skillFactory.makeSkill(incoming.getText(), update.getMessage().isGroupMessage());
