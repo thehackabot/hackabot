@@ -23,6 +23,14 @@ public class Bot extends TelegramLongPollingBot {
     private ConcurrentHashMap<User, Skill> activeSkills;
     private SkillFactory groupFactory, privateFactory;
 
+    public SkillFactory getPrivateFactory() {
+        return privateFactory;
+    }
+
+    public SkillFactory getGroupFactory() {
+        return groupFactory;
+    }
+
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
             logger.info("Received update #" + update.getUpdateId());
@@ -74,11 +82,11 @@ public class Bot extends TelegramLongPollingBot {
         groupFactory = new SkillFactory();
         privateFactory = new SkillFactory();
 
-        privateFactory.register("good bot", GoodBotSkill.class);
-        privateFactory.register("hello", HelloWorldSkill.class);
-        privateFactory.register("guess", NumberGuessSkill.class);
-        privateFactory.register("beer", BeerSkill.class);
-        privateFactory.register("help", help.class);
-        privateFactory.register("rock paper scissor", RockPaperScissorSkill.class);
+        privateFactory.register("good bot", "you are a good bot", GoodBotSkill.class);
+        privateFactory.register("hello", "hello there", HelloWorldSkill.class);
+        privateFactory.register("guess", "i want to guess", NumberGuessSkill.class);
+        privateFactory.register("drunk beer bot", "give beer bot", BeerSkill.class);
+        privateFactory.register("help", "help me please", HelpSkill.class);
+        privateFactory.register("rock paper scissor", "rock paper scissor", RockPaperScissorSkill.class);
     }
 }

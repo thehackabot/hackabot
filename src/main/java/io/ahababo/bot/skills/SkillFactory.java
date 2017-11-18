@@ -5,22 +5,21 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 public class SkillFactory {
     private final static Logger logger = LoggerFactory.getLogger(SkillFactory.class);
     private ArrayList<FactoryItem> factoryItems;
 
-    private class FactoryItem {
+    public class FactoryItem {
         public final Class<? extends Skill> skill;
         public final ArrayList<String> buzzwords;
+        public final String trigger;
 
-        public FactoryItem(Class<? extends Skill> skill, ArrayList<String> buzzwords) {
+        public FactoryItem(Class<? extends Skill> skill, ArrayList<String> buzzwords, String trigger) {
             this.skill = skill;
             this.buzzwords = buzzwords;
+            this.trigger = trigger;
         }
 
         public float match(String sentence) {
@@ -37,13 +36,17 @@ public class SkillFactory {
         }
     }
 
+    public List<FactoryItem> list() {
+        return factoryItems;
+    }
+
     public SkillFactory() {
         factoryItems = new ArrayList<>();
     }
 
-    public void register(String buzzwords, Class<? extends Skill> skill) {
+    public void register(String buzzwords, String exampleTrigger, Class<? extends Skill> skill) {
         ArrayList<String> items = new ArrayList<>(Arrays.asList(buzzwords.toLowerCase().split(" ")));
-        factoryItems.add(new FactoryItem(skill, items));
+        factoryItems.add(new FactoryItem(skill, items, exampleTrigger));
     }
 
     public Skill makeSkill(String buzzwords) throws InstantiationException, IllegalAccessException,InvocationTargetException {
