@@ -6,6 +6,7 @@ import io.ahababo.bot.skills.drinking.BeerSkill;
 import io.ahababo.bot.skills.examples.GoodBotSkill;
 import io.ahababo.bot.skills.examples.HelloWorldSkill;
 import io.ahababo.bot.skills.examples.NumberGuessSkill;
+import io.ahababo.bot.skills.games.RockPaperScissorSkill;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -77,6 +78,8 @@ public class Bot extends TelegramLongPollingBot {
         privateFactory.register("guess", NumberGuessSkill.class);
         privateFactory.register("good bot", GoodBotSkill.class);
         privateFactory.register("beer", BeerSkill.class);
+
+        privateFactory.register("RockPaperScissor", RockPaperScissorSkill.class);
         groupFactory.register("hello", HelloWorldSkill.class);
     }
 }

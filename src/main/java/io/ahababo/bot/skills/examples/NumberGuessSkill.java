@@ -29,7 +29,7 @@ public class NumberGuessSkill extends BasicSkill {
             case 1:
                 try {
                     int guess = Integer.parseInt(incoming.getText());
-                    int computer = new Random().nextInt() % 100;
+                    int computer = new Random().nextInt() % 101;
                     state++;
                     if (state == computer) {
                         return new SendMessage().setChatId(incoming.getChatId()).setText("Oh well, you we're right!");
