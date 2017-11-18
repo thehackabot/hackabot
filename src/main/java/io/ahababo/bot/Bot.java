@@ -15,6 +15,7 @@ import org.glassfish.hk2.api.Self;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -44,9 +45,17 @@ public class Bot extends TelegramLongPollingBot {
 
     public void publish(SendMessage msg) {
         try {
-            execute(msg); // Call method to send the message
+            execute(msg);
         } catch (TelegramApiException e) {
             logger.error("Could not reply to message", e);
+        }
+    }
+
+    public void publish(SendPhoto photo) {
+        try {
+            sendPhoto(photo);
+        } catch (TelegramApiException e) {
+            logger.error("Could not public photo", e);
         }
     }
 
@@ -83,7 +92,7 @@ public class Bot extends TelegramLongPollingBot {
             }
 
             if (reply == null) reply = active.handle(incoming);
-            publish(reply);
+            if (reply != null) publish(reply);
         }
     }
 
