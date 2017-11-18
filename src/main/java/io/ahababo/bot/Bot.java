@@ -1,18 +1,21 @@
 package io.ahababo.bot;
 
-import io.ahababo.bot.skills.drinking.DareSkill;
+import io.ahababo.bot.skills.drinking.EmotionSkill;
+import io.ahababo.bot.skills.drinking.MatchSkill;
 import io.ahababo.bot.skills.examples.*;
 import io.ahababo.bot.skills.Skill;
 import io.ahababo.bot.skills.SkillFactory;
 import io.ahababo.bot.skills.drinking.BeerSkill;
 import io.ahababo.bot.skills.examples.GoodBotSkill;
 import io.ahababo.bot.skills.examples.HelloWorldSkill;
-import io.ahababo.bot.skills.games.HangmanSkill;
 import io.ahababo.bot.skills.games.NumberGuessSkill;
 import io.ahababo.bot.skills.games.RockPaperScissorSkill;
 import io.ahababo.bot.skills.games.SelfieSkill;
+<<<<<<< Updated upstream
 import io.ahababo.bot.skills.party.PowerPointKaraokeSkill;
 import org.glassfish.hk2.api.Self;
+=======
+>>>>>>> Stashed changes
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -23,7 +26,6 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -132,9 +134,10 @@ public class Bot extends TelegramLongPollingBot {
         skillFactory.register("drunk beer bot", "give beer bot", BeerSkill.class, true);
         skillFactory.register("help", "help me please", HelpSkill.class, true);
         skillFactory.register("rock paper scissor", "rock paper scissor", RockPaperScissorSkill.class, true);
-        skillFactory.register("match", "match me with someone", DareSkill.class, false);
+        skillFactory.register("match", "match me with someone", MatchSkill.class, false);
         skillFactory.register("selfie", "rate my selfie", SelfieSkill.class, true);
         skillFactory.register("power point karaoke", "join me for karaoke", PowerPointKaraokeSkill.class, true);
+        skillFactory.register("emotion", "show my emotion", EmotionSkill.class, false);
         //privateFactory.register("hangman","let's play hangman", HangmanSkill.class);
     }
 }
