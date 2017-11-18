@@ -4,14 +4,15 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public class SkillFactory {
     private final static Logger logger = Logger.getLogger(SkillFactory.class.getName());
-    private Map<String, Class<? extends Skill>> skills;
+    private ConcurrentHashMap<String, Class<? extends Skill>> skills;
 
     public SkillFactory() {
-        skills = new HashMap<>();
+        skills = new ConcurrentHashMap<>();
     }
 
     public void register(String buzzwords, Class<? extends Skill> skill) {

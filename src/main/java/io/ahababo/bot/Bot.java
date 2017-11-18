@@ -3,6 +3,7 @@ package io.ahababo.bot;
 import io.ahababo.bot.skills.Skill;
 import io.ahababo.bot.skills.SkillFactory;
 import io.ahababo.bot.skills.examples.HelloWorldSkill;
+import io.ahababo.bot.skills.examples.NumberGuessSkill;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
@@ -18,27 +19,12 @@ public class Bot extends TelegramLongPollingBot {
     private SkillFactory groupFactory, privateFactory;
 
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() || update.hasChannelPost()) {
+        if (update.hasMessage()) {
             logger.info("Received update " + update.getUpdateId());
 
-            Message incoming = null;
-            User user = null;
-            SkillFactory selectedChannel = null;
-            if (update.hasMessage() && update.getMessage().getChat().isUserChat()) {
-                logger.info("Selected private factory for user chat");
-                selectedChannel = privateFactory;
-                incoming = update.getMessage();
-                user = new User(incoming.getFrom().getId());
-            } else if (update.hasChannelPost()) {
-                logger.info("Selected public factory for channel chat");
-                selectedChannel = groupFactory;
-                incoming = update.getChannelPost();
-                user = new User(-1);
-            } else {
-                logger.warning("Received group chat message");
-                // TODO: Handle group chats
-                return;
-            }
+            Message incoming = update.getMessage();
+            User user = new User(incoming.getFrom().getId());
+            SkillFactory selectedChannel = privateFactory;
 
             Skill active = activeSkills.get(user);
             logger.info("Incoming message from user " + user.getUserId() + ": " + incoming.getText());
@@ -85,6 +71,7 @@ public class Bot extends TelegramLongPollingBot {
         privateFactory = new SkillFactory();
 
         privateFactory.register("hello", HelloWorldSkill.class);
+        privateFactory.register("guess", NumberGuessSkill.class);
         groupFactory.register("hello", HelloWorldSkill.class);
     }
 }
