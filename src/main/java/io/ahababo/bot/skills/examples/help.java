@@ -6,7 +6,7 @@ import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 
 public class help extends BasicSkill{
-  private int state=0;
+
   public help(){ super();}
 
   public void init(User user){
@@ -17,11 +17,11 @@ public class help extends BasicSkill{
 
   @Override
   public SendMessage handle(Message incoming) {
-    state++;
-    new SendMessage().setChatId(incoming.getChatId()).setText(message);
-    return null;
+
+
+    return  new SendMessage().setChatId(incoming.getChatId()).setText(message);
   }
 
-  public boolean isFinished(){return state >= 1;}
+  public boolean isFinished(){return true;}
 
 }
