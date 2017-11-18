@@ -11,6 +11,7 @@ import io.ahababo.bot.skills.games.HangmanSkill;
 import io.ahababo.bot.skills.games.NumberGuessSkill;
 import io.ahababo.bot.skills.games.RockPaperScissorSkill;
 import io.ahababo.bot.skills.games.SelfieSkill;
+import io.ahababo.bot.skills.party.PowerPointKaraokeSkill;
 import org.glassfish.hk2.api.Self;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,6 +134,7 @@ public class Bot extends TelegramLongPollingBot {
         skillFactory.register("rock paper scissor", "rock paper scissor", RockPaperScissorSkill.class, true);
         skillFactory.register("match", "match me with someone", DareSkill.class, false);
         skillFactory.register("selfie", "rate my selfie", SelfieSkill.class, true);
+        skillFactory.register("power point karaoke", "join me for karaoke", PowerPointKaraokeSkill.class, true);
         //privateFactory.register("hangman","let's play hangman", HangmanSkill.class);
     }
 }
