@@ -11,15 +11,8 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import java.io.File;
 import java.util.Random;
 
-public class PowerPointKaraokeSkill extends BasicSkill{
-
-    private void sendDocUploadingAFile(Long chatId, java.io.File save, String caption) throws TelegramApiException{
-        SendDocument sendDocumentRequest = new SendDocument();
-        sendDocumentRequest.setChatId(chatId);
-        sendDocumentRequest.setNewDocument(save);
-        sendDocumentRequest.setCaption(caption);
-        getContext().sendDocument(sendDocumentRequest);
-    }
+public class PowerPointKaraokeSkill extends BasicSkill {
+    private final String KARAOKE_MESSAGE = "You started a round of PowerPointKaraoke. Have fun!\nSelected random player to present a slide!";
 
     private File getRandomFile(){
         File[] files = new File("~/OpenSource/ahababo/PowerPointKaraokeSlides/").listFiles();
@@ -28,16 +21,15 @@ public class PowerPointKaraokeSkill extends BasicSkill{
     }
 
     public SendMessage handle(Message message) {
-        String botmsg = "You started a round of PowerPointKaraoke. Have fun! \n";
-        botmsg += "Selected random player to present a slide\n";
-
         int playerIndex = new Random().nextInt() % getContext().getUserPhotosLength();
         User player = getContext().getActiveUsers().get(playerIndex);
+        // Send player photo
         getContext().publish(new SendPhoto().setChatId(message.getChatId()).setPhoto(getContext().getUserPhoto(player)));
-        try {
-            sendDocUploadingAFile(message.getChatId(), getRandomFile(), "Slide");
-        }catch(TelegramApiException e){
-        }
-        return new SendMessage().setChatId(message.getChatId()).setText(botmsg);
+        // Send slide photo
+        SendPhoto photo = new SendPhoto();
+        photo.setChatId(message.getChatId());
+        photo.setNewPhoto(getRandomFile());
+        getContext().publish(photo);
+        return new SendMessage().setChatId(message.getChatId()).setText(KARAOKE_MESSAGE);
     }
 }
