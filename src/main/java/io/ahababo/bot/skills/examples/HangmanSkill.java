@@ -32,6 +32,42 @@ public class HangmanSkill extends BasicSkill {
     state = 0;
   }
 
+  public ArrayList<Character> getLettersGuessed() {
+    return lettersGuessed;
+  }
+
+  private void setHiddenWord() {
+    setWord();
+    for (char letter: word.toCharArray()) {
+      hiddenWord.add('-');
+    }
+  }
+
+  private void setWord() {
+
+    if(level==1){
+      word = wordsLevel1[new Random().nextInt(4)];
+    }
+
+    if(level==2){
+      word = wordsLevel2[new Random().nextInt(7)];
+    }
+
+    if(level==3){
+      word = wordsLevel3[new Random().nextInt(2)];
+    }
+
+  }
+
+  public ArrayList<Character> getHiddenWord() {
+    return hiddenWord;
+  }
+
+  public String getWord() {
+    return word;
+  }
+
+
   @Override
   public SendMessage handle(Message incoming){
     switch (state){
@@ -51,7 +87,8 @@ public class HangmanSkill extends BasicSkill {
       }catch (Exception e) {
           return new SendMessage().setChatId(incoming.getChatId()).setText("You should enter a number!");
         }
-      case 2:
+      //wird es
+        // case 2:
     }
     return null;
   }
