@@ -11,7 +11,7 @@ public class HelpSkill extends BasicSkill{
     @Override
     public SendMessage handle(Message incoming) {
         String triggers = getContext().getPrivateFactory().list().stream()
-                .map(v -> "'" + v.trigger + "' + (" + (v.enableGroup ? "public": "private") + ")").collect(Collectors.joining(", "));
+                .map(v -> "'" + v.trigger + "' (" + (v.enableGroup ? "public": "private") + ")").collect(Collectors.joining(", "));
         return new SendMessage().setChatId(incoming.getChatId()).setText("You could use " + triggers + ".");
     }
 }
