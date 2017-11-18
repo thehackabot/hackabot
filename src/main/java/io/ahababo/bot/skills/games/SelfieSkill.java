@@ -27,6 +27,7 @@ public class SelfieSkill extends StatefulSkill {
                     return new SendMessage().setChatId(message.getChatId()).setText("Just send me a selfie.");
                 }
                 increaseState();
+                getContext().setUserPhoto(getUser(),message.getPhoto().get(message.getPhoto().size()-1).getFileId());
                 getContext().publish(new SendPhoto().setChatId(message.getChatId()).setPhoto(message.getPhoto().get(message.getPhoto().size()-1).getFileId()));
         }
         return null;

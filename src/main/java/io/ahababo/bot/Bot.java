@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.api.objects.PhotoSize;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
@@ -32,11 +33,24 @@ public class Bot extends TelegramLongPollingBot {
     private ConcurrentHashMap<User, Long> privateUsers;
     private ConcurrentHashMap<User, Skill> activeSkills;
     private SkillFactory skillFactory;
+    private ConcurrentHashMap<User, String> userPhotos;
 
     public List<User> getActiveUsers() {
         return privateUsers.keySet().stream()
                 .filter(v -> System.currentTimeMillis() - privateUsers.get(v) <= USER_TIMEOUT)
                 .collect(Collectors.toList());
+    }
+
+    public String getUserPhoto(User user){
+       return userPhotos.get(user);
+    }
+
+    public int getUserPhotosLength(){
+        return userPhotos.size();
+    }
+
+    public void setUserPhoto(User user, String fileId){
+        userPhotos.put(user, fileId);
     }
 
     public SkillFactory getPrivateFactory() {
@@ -108,6 +122,7 @@ public class Bot extends TelegramLongPollingBot {
     public Bot() {
         privateUsers = new ConcurrentHashMap<>();
         activeSkills = new ConcurrentHashMap<>();
+        userPhotos = new ConcurrentHashMap<>();
         skillFactory = new SkillFactory();
 
         skillFactory.register("good bot", "you are a good bot", GoodBotSkill.class, true);
