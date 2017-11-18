@@ -15,4 +15,9 @@ public class User {
         if (!(o instanceof User)) return false;
         return ((User) o).id == id;
     }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
 }

@@ -2,6 +2,7 @@ package io.ahababo.bot;
 
 import io.ahababo.bot.skills.Skill;
 import io.ahababo.bot.skills.SkillFactory;
+import io.ahababo.bot.skills.examples.GoodBotSkill;
 import io.ahababo.bot.skills.examples.HelloWorldSkill;
 import io.ahababo.bot.skills.examples.NumberGuessSkill;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -26,9 +27,10 @@ public class Bot extends TelegramLongPollingBot {
             User user = new User(incoming.getFrom().getId());
             SkillFactory selectedChannel = privateFactory;
 
+
             Skill active = activeSkills.get(user);
             logger.info("Incoming message from user " + user.getUserId() + ": " + incoming.getText());
-            if (active == null || (active != null && active.isFinished())) {
+             if (active == null || (active != null && active.isFinished())) {
                 logger.info("Searching for new skill");
                 try {
                     active = selectedChannel.makeSkill(incoming.getText());
@@ -72,6 +74,7 @@ public class Bot extends TelegramLongPollingBot {
 
         privateFactory.register("hello", HelloWorldSkill.class);
         privateFactory.register("guess", NumberGuessSkill.class);
+        privateFactory.register("good bot", GoodBotSkill.class);
         groupFactory.register("hello", HelloWorldSkill.class);
     }
 }
