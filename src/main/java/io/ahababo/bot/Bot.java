@@ -5,6 +5,8 @@ import io.ahababo.bot.skills.SkillFactory;
 import io.ahababo.bot.skills.examples.GoodBotSkill;
 import io.ahababo.bot.skills.examples.HelloWorldSkill;
 import io.ahababo.bot.skills.examples.NumberGuessSkill;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
@@ -12,30 +14,28 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 public class Bot extends TelegramLongPollingBot {
-    private final static Logger logger = Logger.getLogger(Bot.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(Bot.class);
     private ConcurrentHashMap<User, Skill> activeSkills;
     private SkillFactory groupFactory, privateFactory;
 
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
-            logger.info("Received update " + update.getUpdateId());
+            logger.info("Received update #" + update.getUpdateId());
 
             Message incoming = update.getMessage();
             User user = new User(incoming.getFrom().getId());
             SkillFactory selectedChannel = privateFactory;
 
-
             Skill active = activeSkills.get(user);
-            logger.info("Incoming message from user " + user.getUserId() + ": " + incoming.getText());
+            logger.info("Incoming message from user #" + user.getUserId() + ": " + incoming.getText());
              if (active == null || (active != null && active.isFinished())) {
                 logger.info("Searching for new skill");
                 try {
                     active = selectedChannel.makeSkill(incoming.getText());
                     if (active == null) {
-                        logger.warning("Failed to handle command");
+                        logger.error("Failed to handle command");
                         // TODO: Show useful 'command not found' message
                         return;
                     }
@@ -52,7 +52,7 @@ public class Bot extends TelegramLongPollingBot {
             try {
                 execute(reply); // Call method to send the message
             } catch (TelegramApiException e) {
-                logger.warning(e.getMessage());
+                logger.error("Could not reply to message", e);
             }
         }
     }

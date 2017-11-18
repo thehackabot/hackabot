@@ -1,14 +1,14 @@
 package io.ahababo.bot.skills;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 public class SkillFactory {
-    private final static Logger logger = Logger.getLogger(SkillFactory.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(SkillFactory.class);
     private ConcurrentHashMap<String, Class<? extends Skill>> skills;
 
     public SkillFactory() {
