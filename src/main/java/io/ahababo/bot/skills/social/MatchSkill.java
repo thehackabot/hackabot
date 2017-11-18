@@ -38,6 +38,7 @@ public class MatchSkill extends StatefulSkill {
     private SendMessage handleSelfieState(Message incoming) {
         if (incoming.getPhoto() != null) {
             image = incoming.getPhoto().get(incoming.getPhoto().size()-1).getFileId();
+            getContext().setUserPhoto(getUser(),incoming.getPhoto().get(incoming.getPhoto().size()-1).getFileId());
             try {
                 EmotionDetector.Result[] output = EmotionDetector.detect(getContext(), image);
                 if (output.length > 1) {
