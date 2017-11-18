@@ -114,21 +114,13 @@ public class EmotionDetector {
         public String toString() {
             StringBuilder builder = new StringBuilder(" ");
             if (anger > 0.8) builder.append("You are angry. ");
-            else if (anger < 0.15) builder.append("You are not angry. ");
             if (contempt > 0.8) builder.append("You are contempt. ");
-            else if (contempt < 0.15) builder.append("You are not contempt. ");
             if (disgust > 0.8) builder.append("You are disgusted. ");
-            else if (disgust < 0.15) builder.append("You are not disgusted. ");
             if (fear > 0.8) builder.append("You have fear. ");
-            else if (fear < 0.15) builder.append("You have no fear. ");
             if (happiness > 0.8) builder.append("You are happy. ");
-            else if (happiness < 0.15) builder.append("You are not happy. ");
             if (neutral > 0.8) builder.append("You look neutral. ");
-            else if (neutral < 0.15) builder.append("You look not neutral. ");
             if (sadness > 0.8) builder.append("You look sad. ");
-            else if (sadness < 0.15) builder.append("You look not sad. ");
             if (surprise > 0.8) builder.append("You look surprised. ");
-            else if (surprise < 0.15) builder.append("You are not surprised. ");
             return builder.toString();
         }
     }
