@@ -77,10 +77,9 @@ public class Bot extends TelegramLongPollingBot {
 
             Message incoming = update.getMessage();
             User user = new User(incoming.getFrom().getId(), incoming.getChatId());
+            privateUsers.put(user, System.currentTimeMillis());
             if (update.getMessage().isGroupMessage()) {
                 user = new User(-incoming.getChatId().intValue(), incoming.getChatId());
-            } else {
-                privateUsers.put(user, System.currentTimeMillis());
             }
 
             Skill active = activeSkills.get(user);
