@@ -2,7 +2,6 @@ package io.ahababo.bot.skills.games;
 
 import io.ahababo.bot.Bot;
 import io.ahababo.bot.User;
-import io.ahababo.bot.skills.BasicSkill;
 import io.ahababo.bot.skills.StatefulSkill;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
@@ -24,6 +23,9 @@ public class NumberGuessSkill extends StatefulSkill {
             case 1:
                 try {
                     int guess = Integer.parseInt(incoming.getText());
+                    if (guess <0 || guess>100){
+                        return new SendMessage().setChatId(incoming.getChatId()).setText("You should enter a number between 0 and 100");
+                    }
                     int computer = new Random().nextInt(100) + 1;
                     increaseState();
                     if (state == computer) {
