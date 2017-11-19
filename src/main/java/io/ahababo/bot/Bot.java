@@ -43,6 +43,10 @@ public class Bot extends TelegramLongPollingBot {
         return userPhotos.get(user);
     }
 
+    public List<User> getPhotoUsers() {
+        return userPhotos.keySet().stream().collect(Collectors.toList());
+    }
+
     public int getUserPhotosLength() {
         return userPhotos.size();
     }
