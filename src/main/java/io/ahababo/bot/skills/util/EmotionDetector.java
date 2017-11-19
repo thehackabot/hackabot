@@ -93,6 +93,13 @@ public class EmotionDetector {
 
         public double similarTo(Result r) {
             double[] x = r.rawValues(), y = rawValues();
+
+            // normalize x and y
+            for (int i = 0; i < x.length; i++) {
+                x[i] = x[i] * 2.0 - 1.0;
+                y[i] = y[i] * 2.0 - 1.0;
+            }
+
             double a = 0;
             for (int i = 0; i < x.length; i++) {
                 a += x[i] * y[i];

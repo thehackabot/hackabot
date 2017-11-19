@@ -15,7 +15,7 @@ public class PowerPointKaraokeSkill extends BasicSkill {
     private final String KARAOKE_MESSAGE = "You started a round of PowerPointKaraoke. Have fun!\nSelected random player to present a slide!";
 
     private File getRandomFile(){
-        File[] files = new File("~/OpenSource/ahababo/PowerPointKaraokeSlides/").listFiles();
+        File[] files = new File("PowerPointKaraokeSlides/").listFiles();
         int randomSlideIndex = new Random().nextInt()%files.length;
         return files[randomSlideIndex];
     }
