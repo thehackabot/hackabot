@@ -12,7 +12,7 @@ cd hackabot
 mvn install
 
 # setting up the environment
-LOCALIZATION=src/main/res/localization.properties
+LOCAL_FILE=src/main/res/localization.properties
 WEB_PORT=80
 BOT_TOKEN="my-private-token"
 BOT_NAME="my-bot-name"
