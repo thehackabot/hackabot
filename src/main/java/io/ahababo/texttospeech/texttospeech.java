@@ -1,4 +1,4 @@
-package io.ahababo.TextToSpeech;
+package io.ahababo.texttospeech;
 
 import java.util.Scanner;
 

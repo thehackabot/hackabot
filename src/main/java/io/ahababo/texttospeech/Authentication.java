@@ -1,4 +1,4 @@
-package io.ahababo.TextToSpeech;
+package io.ahababo.texttospeech;
 /*
 Copyright (c) Microsoft Corporation
 All rights reserved.
@@ -21,8 +21,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.net.URLEncoder;
 import java.util.Timer;
 import java.util.TimerTask;
 

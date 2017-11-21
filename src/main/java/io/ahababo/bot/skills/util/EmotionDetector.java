@@ -23,7 +23,6 @@ public class EmotionDetector {
     private static final String TELEGRAM_FILE_API = "https://api.telegram.org/bot%s/getFile?file_id=%s";
     private static final String TELEGRAM_IMAGE_API = "https://api.telegram.org/file/bot%s/%s";
     private static final String AZURE_COGNITION_API = "https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize";
-    private static final String AZURE_COGNITION_KEY = "3521efef1d1646eeb40a128921297811";
 
     private static String sendRequest(HttpUriRequest request) throws Exception {
         HttpClient client = new DefaultHttpClient();
@@ -49,7 +48,7 @@ public class EmotionDetector {
         URIBuilder emotionUri = new URIBuilder(AZURE_COGNITION_API);
         HttpPost emotionRequest = new HttpPost(emotionUri.build());
         emotionRequest.setHeader("Content-Type", "application/json");
-        emotionRequest.setHeader("Ocp-Apim-Subscription-Key", AZURE_COGNITION_KEY);
+        emotionRequest.setHeader("Ocp-Apim-Subscription-Key", System.getenv("COGNITION_KEY"));
 
         StringEntity requestEntity = new StringEntity("{ \"url\": \"" + imageUri.build().toString() + "\" }");
         emotionRequest.setEntity(requestEntity);

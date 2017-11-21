@@ -6,12 +6,11 @@ import io.ahababo.bot.skills.drinking.BeerSkill;
 import io.ahababo.bot.skills.social.EmotionSkill;
 import io.ahababo.bot.skills.social.MatchSkill;
 import io.ahababo.bot.skills.examples.GoodBotSkill;
-import io.ahababo.bot.skills.examples.HelloWorldSkill;
 import io.ahababo.bot.skills.examples.HelpSkill;
 import io.ahababo.bot.skills.games.NumberGuessSkill;
 import io.ahababo.bot.skills.games.RockPaperScissorSkill;
 import io.ahababo.bot.skills.games.SelfieSkill;
-import io.ahababo.bot.skills.party.PowerPointKaraokeSkill;
+import io.ahababo.bot.skills.party.Karaoke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -94,7 +93,7 @@ public class Bot extends TelegramLongPollingBot {
                 try {
                     active = skillFactory.makeSkill(incoming.getText(), update.getMessage().isGroupMessage());
                     if (active == null) {
-                        logger.error("Failed to classify command");
+                        logger.error("Failed to classify command '" + incoming.getText() + "'");
                         return;
                     } else {
                         active.init(this, user);
@@ -102,7 +101,9 @@ public class Bot extends TelegramLongPollingBot {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    reply = new SendMessage().setChatId(incoming.getChatId()).setText("Oh boy, oh boy, oh boy ...");
+                    reply = new SendMessage()
+                            .setChatId(incoming.getChatId())
+                            .setText(Localization.getInstance().get("Bot.Error"));
                 }
             }
 
@@ -112,12 +113,12 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public String getBotUsername() {
-        return "ahababot";
+        return System.getenv("BOT_NAME");
     }
 
     @Override
     public String getBotToken() {
-        return "***REMOVED***";
+        return System.getenv("BOT_TOKEN");
     }
 
     public Bot() {
@@ -125,17 +126,14 @@ public class Bot extends TelegramLongPollingBot {
         activeSkills = new ConcurrentHashMap<>();
         userPhotos = new ConcurrentHashMap<>();
         skillFactory = new SkillFactory();
-
-        skillFactory.register("good bot", "you are a good bot", GoodBotSkill.class, true);
-        skillFactory.register("hello", "hello there", HelloWorldSkill.class, true);
-        skillFactory.register("guess", "i want to guess", NumberGuessSkill.class, true);
-        skillFactory.register("drunk beer bot", "give beer bot", BeerSkill.class, true);
-        skillFactory.register("help", "help me please", HelpSkill.class, true);
-        skillFactory.register("rock paper scissor", "rock paper scissor", RockPaperScissorSkill.class, true);
-        skillFactory.register("match", "match me with someone", MatchSkill.class, false);
-        skillFactory.register("selfie", "rate my selfie", SelfieSkill.class, true);
-        skillFactory.register("power point karaoke", "join me for karaoke", PowerPointKaraokeSkill.class, true);
-        skillFactory.register("emotion", "show my emotion", EmotionSkill.class, true);
-        //privateFactory.register("hangman","let's play hangman", HangmanSkill.class);
+        skillFactory.register("GoodBot", GoodBotSkill.class, true);
+        skillFactory.register("Guess", NumberGuessSkill.class, true);
+        skillFactory.register("Beer", BeerSkill.class, true);
+        skillFactory.register("Help", HelpSkill.class, true);
+        skillFactory.register("RPS", RockPaperScissorSkill.class, true);
+        skillFactory.register("Match", MatchSkill.class, false);
+        skillFactory.register("Selfie", SelfieSkill.class, true);
+        skillFactory.register("Karaoke", Karaoke.class, true);
+        skillFactory.register("Emotion", EmotionSkill.class, true);
     }
 }

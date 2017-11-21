@@ -1,6 +1,7 @@
 package io.ahababo.bot.skills.social;
 
 import io.ahababo.bot.Bot;
+import io.ahababo.bot.Localization;
 import io.ahababo.bot.User;
 import io.ahababo.bot.skills.StatefulSkill;
 import io.ahababo.bot.skills.util.EmotionDetector;
@@ -11,15 +12,7 @@ import org.telegram.telegrambots.api.objects.Message;
 import java.util.ArrayList;
 
 public class MatchSkill extends StatefulSkill {
-    private final String MATCH_ALREADY_LOOKING = "Sorry, but you are already looking for a match.";
-    private final String MATCH_TAKE_PHOTO = "Please take a photo of yourself.";
-    private final String MATCH_TOO_MANY_PERSON = "There seem to be too many persons on the picture. Please remove any unnecessary humans.";
-    private final String MATCH_NO_PERSON = "You seem to be invisble to me. Please try again.";
-    private final String MATCH_ERROR = "I was not able to evaluate you. Please try again later.";
-    private final String MATCH_DESCRIBE = "Please describe yourself.";
-    private final String MATCH_IGNORE = "Well, if you don't want to.";
-    private final String MATCH_FOUND = "Your search was successful. You are %.2f%% similar to your match. He/she describes himself/herself as '%s'.";
-    private final String MATCH_IN_QUEUE = "You are a right proper lad. We will find a match for you.";
+    private final static Localization local = Localization.getInstance();
     private final int MIN_MATCHES = 3;
 
     private String description, image;
@@ -28,10 +21,14 @@ public class MatchSkill extends StatefulSkill {
     private SendMessage handleWelcomeState(Message incoming) {
         if (CommonContext.getInstance().exists(getUser())) {
             increaseState(); increaseState(); increaseState();
-            return new SendMessage().setChatId(incoming.getChatId()).setText(MATCH_ALREADY_LOOKING);
+            return new SendMessage()
+                    .setChatId(incoming.getChatId())
+                    .setText(local.get("Match", "AlreadyActive"));
         } else {
             increaseState();
-            return new SendMessage().setChatId(incoming.getChatId()).setText(MATCH_TAKE_PHOTO);
+            return new SendMessage()
+                    .setChatId(incoming.getChatId())
+                    .setText(local.get("Match", "TakePhoto"));
         }
     }
 
@@ -42,22 +39,32 @@ public class MatchSkill extends StatefulSkill {
             try {
                 EmotionDetector.Result[] output = EmotionDetector.detect(getContext(), image);
                 if (output.length > 1) {
-                    return new SendMessage().setChatId(incoming.getChatId()).setText(MATCH_TOO_MANY_PERSON);
+                    return new SendMessage()
+                            .setChatId(incoming.getChatId())
+                            .setText(local.get("Match", "TooManyHumans"));
                 } else if (output.length < 1) {
-                    return new SendMessage().setChatId(incoming.getChatId()).setText(MATCH_NO_PERSON);
+                    return new SendMessage()
+                            .setChatId(incoming.getChatId())
+                            .setText(local.get("Match", "NoHumans"));
                 }
                 emotions = output[0];
             } catch (Exception e) {
                 increaseState();
                 increaseState();
-                return new SendMessage().setChatId(incoming.getChatId()).setText(MATCH_ERROR);
+                return new SendMessage()
+                        .setChatId(incoming.getChatId())
+                        .setText(local.get("Match", "Error"));
             }
             increaseState();
-            return new SendMessage().setChatId(incoming.getChatId()).setText(MATCH_DESCRIBE);
+            return new SendMessage()
+                    .setChatId(incoming.getChatId())
+                    .setText(local.get("Match", "Describe"));
         } else {
             increaseState();
             increaseState();
-            return new SendMessage().setChatId(incoming.getChatId()).setText(MATCH_IGNORE);
+            return new SendMessage()
+                    .setChatId(incoming.getChatId())
+                    .setText(local.get("Match", "Ignore"));
         }
     }
 
@@ -69,20 +76,20 @@ public class MatchSkill extends StatefulSkill {
             double similarity = (entry.emotions.similarTo(emotions) / 2.0 + 0.5) * 100.0;
             getContext().publish(new SendMessage()
                     .setChatId(entry.match.getChatId())
-                    .setText(String.format(MATCH_FOUND, similarity, description)));
+                    .setText(String.format(local.get("Match", "Found"), similarity, description)));
             getContext().publish(new SendPhoto()
                     .setChatId(entry.match.getChatId())
                     .setPhoto(image));
             CommonContext.getInstance().accept(entry);
             getContext().publish(new SendMessage()
                     .setChatId(incoming.getChatId())
-                    .setText(String.format(MATCH_FOUND, similarity, entry.description)));
+                    .setText(String.format(local.get("Match", "Found"), similarity, entry.description)));
             getContext().publish(new SendPhoto()
                     .setChatId(incoming.getChatId())
                     .setPhoto(entry.image));
         } else {
             CommonContext.getInstance().enqueue(getUser(), description, image, emotions);
-            return new SendMessage().setChatId(incoming.getChatId()).setText(MATCH_IN_QUEUE);
+            return new SendMessage().setChatId(incoming.getChatId()).setText(local.get("Match", "InQueue"));
         }
         return null;
     }

@@ -1,4 +1,4 @@
-package io.ahababo.TextToSpeech;
+package io.ahababo.texttospeech;
 /*
 Copyright (c) Microsoft Corporation
 All rights reserved.

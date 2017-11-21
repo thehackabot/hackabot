@@ -1,82 +1,61 @@
 package io.ahababo.bot.skills.games;
 
 import io.ahababo.bot.Bot;
+import io.ahababo.bot.Localization;
 import io.ahababo.bot.User;
 import io.ahababo.bot.skills.BasicSkill;
+import io.ahababo.bot.skills.StatefulSkill;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 
 import java.util.Random;
 
-public class RockPaperScissorSkill extends BasicSkill{
-    private int state;
-
-    public RockPaperScissorSkill(){ super();}
+public class RockPaperScissorSkill extends StatefulSkill {
+    private final static Localization local = Localization.getInstance();
 
     public void init(Bot context, User user){
-        super.init(context, user);
-        state = 0;
+        super.init(context, user, 2);
     }
 
     @Override
-    public SendMessage handle(Message incoming) {
-        String botmsg = "";
-        String botchoice = "";
+    public SendMessage transition(Message message, int state) {
         switch (state) {
             case 0:
-                state++;
-                botmsg = "So you decided to play against the evil super AI. Good Luck." +
-                                "What do you chose? Rock, Paper or Scissor";
-                return new SendMessage().setChatId(incoming.getChatId()).setText(botmsg);
+                increaseState();
+                return new SendMessage()
+                        .setChatId(message.getChatId())
+                        .setText(local.get("RPS", "Intro"));
             case 1:
+                String botChoice;
                 int random = new Random().nextInt() % 3;
-                switch (random){
-                    case 0: botchoice += "Rock";
-                        break;
-                    case 1: botchoice += "Paper";
-                        break;
-                    case 2: botchoice += "Scissor";
-                        break;
-                    default:botchoice += "Internal faillure";
-                        break;
+                switch (random) {
+                    case 0: botChoice = local.get("RPS", "Rock"); break;
+                    case 1: botChoice = local.get("RPS", "Paper"); break;
+                    case 2: botChoice = local.get("RPS", "Scissor"); break;
+                    default: botChoice = "invalid";
                 }
-                if(incoming.getText().equals(botchoice)) {
-                    botmsg = "Good choice. We both picked the same. I win";
-                    state++;
-                    return new SendMessage().setChatId(incoming.getChatId()).setText(botmsg);
+                if (message.getText().equals(botChoice)) {
+                    increaseState();
+                    return new SendMessage()
+                            .setChatId(message.getChatId())
+                            .setText(local.get("RPS", "Draw"));
                 }
-                switch(incoming.getText()) {
-                    case "Rock":
-                        if(botchoice.equals("Scissor")) {
-                            botmsg = "-Scissor\n"+"Well played. You win";
-                        }else{
-                            botmsg = "-Paper\n"+"HAHAHA I WIN!";
-                        }
-                        state++;
-                        break;
-                    case "Paper":
-                        if(botchoice.equals("Rock")) {
-                            botmsg = "-Rock\n"+"Well played. You win";
-                        }else{
-                            botmsg = "-Scissor\n"+"HAHAHA I WIN!";
-                        }
-                        state++;
-                        break;
-                    case "Scissor":
-                        if(botchoice.equals("Paper")) {
-                            botmsg = "-Paper\n"+"Well played. You win";
-                        }else{
-                            botmsg = "-Rock\n"+"HAHAHA I WIN!";
-                        }
-                        state++;
-                        break;
-                    default:botmsg = "Do you even know how to play this game?";
-                        break;
+
+                boolean didBotWin;
+                if (message.getText().equals(local.get("RPS", "Rock"))) {
+                    didBotWin = botChoice.equals(local.get("RPS", "Rock"));
+                } else if (message.getText().equals(local.get("RPS", "Paper"))) {
+                    didBotWin = botChoice.equals(local.get("RPS", "Rock"));
+                } else if (message.getText().equals(local.get("RPS", "Scissor"))) {
+                    didBotWin = botChoice.equals(local.get("RPS", "Scissor"));
+                } else {
+                    return new SendMessage().setChatId(message.getChatId()).setText(local.get("Skill", "BadInput"));
                 }
-                return new SendMessage().setChatId(incoming.getChatId()).setText(botmsg);
+                increaseState();
+                return new SendMessage()
+                        .setText(String.format(local.get("RPS", didBotWin ? "BotWin": "UserWin"), botChoice))
+                        .setChatId(message.getChatId());
         }
         return null;
     }
-
-    public boolean isFinished(){return state >=2;}
 }

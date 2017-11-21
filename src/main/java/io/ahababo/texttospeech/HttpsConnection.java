@@ -1,5 +1,4 @@
-package io.ahababo.TextToSpeech;
-
+package io.ahababo.texttospeech;
 /*
 Copyright (c) Microsoft Corporation
 All rights reserved.
@@ -18,26 +17,16 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-  /// <summary>
-/// Voice output formats.
-/// </summary>
-  public class AudioOutputFormat {
+import java.net.URL;
 
-    /// <summary>
-    /// raw-8khz-8bit-mono-mulaw request output audio format type.
-    /// </summary>
-    public static final String Raw8Khz8BitMonoMULaw = "raw-8khz-8bit-mono-mulaw";
-    /// <summary>
-    /// raw-16khz-16bit-mono-pcm request output audio format type.
-    /// </summary>
-    public static final String Raw16Khz16BitMonoPcm = "raw-16khz-16bit-mono-pcm";
-    /// <summary>
-    /// riff-8khz-8bit-mono-mulaw request output audio format type.
-    /// </summary>
-    public static final String Riff8Khz8BitMonoMULaw = "riff-16khz-16bit-mono-pcm";
-    /// <summary>
-    /// riff-16khz-16bit-mono-pcm request output audio format type.
-    /// </summary>
-    public static final String Riff16Khz16BitMonoPcm = "riff-16khz-16bit-mono-pcm";
+import javax.net.ssl.HttpsURLConnection;
+
+public class HttpsConnection {
+
+  public static HttpsURLConnection getHttpsConnection (String connectingUrl) throws Exception {
+
+    URL url = new URL(connectingUrl);
+    HttpsURLConnection webRequest = (HttpsURLConnection) url.openConnection();
+    return webRequest;
   }
-
+}

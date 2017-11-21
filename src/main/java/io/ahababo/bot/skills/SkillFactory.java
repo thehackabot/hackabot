@@ -1,5 +1,7 @@
 package io.ahababo.bot.skills;
 
+import io.ahababo.bot.Localization;
+import jdk.vm.ci.meta.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +50,10 @@ public class SkillFactory {
         factoryItems = new ArrayList<>();
     }
 
-    public void register(String buzzwords, String exampleTrigger, Class<? extends Skill> skill, boolean enableGroup) {
+    public void register(String name, Class<? extends Skill> skill, boolean enableGroup) {
+        String buzzwords = Localization.getInstance().getTrigger(name);
+        String exampleTrigger = Localization.getInstance().getExample(name);
+
         ArrayList<String> items = new ArrayList<>(Arrays.asList(buzzwords.toLowerCase().split(" ")));
         factoryItems.add(new FactoryItem(skill, items, exampleTrigger, enableGroup));
     }
